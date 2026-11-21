@@ -1,6 +1,6 @@
-﻿using EWarrantySystem.Controllers;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication1.DTOs;
 using WebApplication1.Services;
 
 namespace WebApplication1.Controllers
@@ -17,18 +17,21 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserRegisterDto dto)
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(UserRegister dto)
         {
             return Ok(await _service.Register(dto));
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserLoginDto dto)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(UserLogin dto)
         {
             var token = await _service.Login(dto);
 
             if (token == null)
-                return Unauthorized("Invalid username or password.");
+                return Unauthorized(
+                    "Invalid username or password.");
 
             return Ok(new { token });
         }

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6fa"><meta name="description" content="Bảng điều khiển quản trị E-Warranty">
+  <title>Admin Dashboard | zolo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin-dashboard.css?v=logo-fix-20261121">
+  <style>.nav-group .group-items>a[href^="/admin/"]>span:first-child{width:15px;flex:none;text-align:center;font-size:12px}.sidebar-collapsed .nav-group .group-items>a[href^="/admin/"]>span:first-child{display:inline-block}</style>
+</head>
+<body class="dashboard-body">
+  <div class="mobile-shade" id="mobile-shade"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand-row"><a class="brand" href="/" aria-label="zolo, trang chủ"><img class="brand-logo-img" src="/assets/logo.png" width="44" height="48" alt=""><span><b>ZOLO</b></span></a><button class="sidebar-toggle" id="sidebar-toggle" aria-label="Thu gọn menu" title="Thu gọn menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></div>
+    <nav class="sidebar-nav" aria-label="Admin navigation">
+      <section class="nav-group"><button class="group-heading" aria-expanded="true"><span>T&#x1ED4;NG QUAN</span><svg viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></button><div class="group-items">
+      <a class="side-link active" href="/admin/dashboard"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Th&#x1ED1;ng k&#xEA;</span></a>
+      </div></section>
+      <section class="nav-group"><button class="group-heading" aria-expanded="true"><span>SYSTEM</span><svg viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></button><div class="group-items">
+      <button type="button" class="side-parent" id="account-menu-toggle" aria-expanded="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2m3-9a3 3 0 0 0 0-6m3 15v-2a6 6 0 0 0-3-5"/></svg><span>T&#xE0;i kho&#x1EA3;n</span><span class="parent-chevron">&#x2303;</span></button>
+      <div class="side-submenu"><a class="side-sublink" href="/admin/account-roles"><i>&#x25CB;</i><span>C&#x1EA5;u h&#xEC;nh</span></a><a class="side-sublink" href="/admin/accounts"><i>&#x25CF;</i><span>User</span></a></div>
+      </div></section>
+      <section class="nav-group"><button class="group-heading" aria-expanded="true"><span>PRODUCT</span><svg viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></button><div class="group-items">
+      <a class="side-link" href="/admin/brands"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Th&#x1B0;&#x1A1;ng hi&#x1EC7;u</span></a>
+      <a class="side-link" href="/admin/categories"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Ph&#xE2;n lo&#x1EA1;i s&#x1EA3;n ph&#x1EA9;m</span></a>
+      <a class="side-link" href="/admin/products"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Model / S&#x1EA3;n ph&#x1EA9;m</span></a>
+      <a class="side-link" href="/admin/dashboard.html?module=accounts&amp;role=Customer"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Kh&#xE1;ch h&#xE0;ng</span></a>
+      <a class="side-link unavailable" href="#" data-feature="API t&#x1EA1;o m&#xE3; ch&#x1B0;a &#x111;&#x1B0;&#x1EE3;c tri&#x1EC3;n khai."><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>T&#x1EA1;o m&#xE3; / M&#xE3; b&#x1EA3;o h&#xE0;nh</span></a>
+      <a class="side-link unavailable" href="#" data-feature="Ch&#x1B0;a c&#xF3; d&#x1EEF; li&#x1EC7;u l&#x1ECB;ch s&#x1EED; b&#x1EA3;o tr&#xEC;."><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Nh&#x1EAF;c b&#x1EA3;o tr&#xEC;</span></a>
+      </div></section>
+      <section class="nav-group"><button class="group-heading" aria-expanded="true"><span>WAREHOUSE</span><svg viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></button><div class="group-items">
+      <a class="side-link" href="/admin/warehouses"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Danh s&#xE1;ch kho</span></a>
+      <a class="side-link" href="/admin/receipts"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Nh&#x1EAD;p h&#xE0;ng</span></a>
+      <a class="side-link" href="/admin/shipments"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Xu&#x1EA5;t &#x111;&#x1EBF;n &#x111;&#x1EA1;i l&#xFD;</span></a>
+      <a class="side-link" href="/admin/inventory"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>T&#x1ED3;n kho</span></a>
+      </div></section>
+      <section class="nav-group"><button class="group-heading" aria-expanded="true"><span>WARRANTY</span><svg viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></button><div class="group-items">
+      <a class="side-link" href="/admin/warranty-types"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Lo&#x1EA1;i b&#x1EA3;o h&#xE0;nh</span></a>
+      <a class="side-link" href="/admin/fault-groups"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Nh&#xF3;m l&#x1ED7;i</span></a>
+      <a class="side-link" href="/admin/service-prices"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Gi&#xE1; d&#x1ECB;ch v&#x1EE5;</span></a>
+      <a class="side-link" href="/admin/travel-prices"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Gi&#xE1; di chuy&#x1EC3;n</span></a>
+      <a class="side-link" href="/admin/warranty-requests"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Phi&#x1EBF;u b&#x1EA3;o h&#xE0;nh</span></a>
+      </div></section>
+      <section class="nav-group"><button class="group-heading" aria-expanded="true"><span>LINH KI&#x1EC6;N</span><svg viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></button><div class="group-items">
+      <a class="side-link" href="/admin/components"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>T&#x1ED5;ng kho linh ki&#x1EC7;n</span></a>
+      <a class="side-link" href="/admin/stations"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Tr&#x1EA1;m s&#x1EED;a ch&#x1EEF;a</span></a>
+      <a class="side-link" href="/admin/station-parts"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Linh ki&#x1EC7;n &#x1EDF; tr&#x1EA1;m</span></a>
+      <a class="side-link" href="/admin/allocations"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Ph&#xE2;n b&#x1ED5; linh ki&#x1EC7;n</span></a>
+      <a class="side-link" href="/admin/component-receipts"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Phi&#x1EBF;u nh&#x1EAD;p linh ki&#x1EC7;n</span></a>
+      <a class="side-link" href="/admin/component-proposals"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>Phi&#x1EBF;u &#x111;&#x1EC1; xu&#x1EA5;t</span></a>
+      </div></section>
+      <section class="nav-group"><button class="group-heading" aria-expanded="true"><span>G&#x1EEC;I TIN</span><svg viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></button><div class="group-items">
+      <a class="side-link unavailable" href="#" data-feature="Ch&#x1B0;a t&#xED;ch h&#x1EE3;p ZNS."><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>ZNS</span></a>
+      </div></section>
+      <section class="nav-group"><button class="group-heading" aria-expanded="true"><span>H&#x1B0;&#x1EDA;NG D&#x1EAA;N</span><svg viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></button><div class="group-items">
+      <a class="side-link unavailable" href="#" data-feature="Trang h&#x1B0;&#x1EDB;ng d&#x1EAB;n ch&#x1B0;a &#x111;&#x1B0;&#x1EE3;c tri&#x1EC3;n khai."><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg><span>H&#x1B0;&#x1EDB;ng d&#x1EAB;n s&#x1EED; d&#x1EE5;ng</span></a>
+      </div></section>
+      </nav>
+    <div class="sidebar-bottom"><span class="status-dot"></span><span>Admin Console</span><span class="version">v1</span></div>
+  </aside>
+
+  <div class="page-shell" id="page-shell">
+    <header class="topbar"><div class="topbar-left"><button class="mobile-menu" id="mobile-menu" aria-label="Mở menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><span class="topbar-title">Quản trị hệ thống</span></div>
+      <div class="topbar-actions"><button class="upgrade-button" type="button" disabled title="Chức năng nâng cấp dịch vụ chưa được tích hợp"><span>↑</span> Nâng cấp gói dịch vụ</button><button class="icon-button" type="button" aria-label="Thông báo" title="Chưa có thông báo"><svg viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4"/></svg></button><button class="icon-button" type="button" aria-label="Cài đặt" title="Cài đặt chưa được triển khai"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1a2 2 0 1 1-2.8 2.8l-.1-.1a2 2 0 0 0-3.4 1.4v.3a2 2 0 1 1-4 0v-.2A2 2 0 0 0 5.8 17l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a2 2 0 0 0-1.4-3.4h-.3a2 2 0 1 1 0-4h.2A2 2 0 0 0 3 4.2l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a2 2 0 0 0 3.4-1.4v-.3a2 2 0 1 1 4 0v.2A2 2 0 0 0 17.2 1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a2 2 0 0 0 1.4 3.4h.3a2 2 0 1 1 0 4h-.2a2 2 0 0 0-2.1 3.8Z" transform="translate(1 2) scale(.9)"/></svg></button>
+        <div class="account-menu-wrap"><button class="account-trigger" id="account-trigger" aria-expanded="false" aria-haspopup="true"><span class="avatar" id="user-avatar">A</span><span class="account-label"><b id="user-name">Admin</b><small id="user-role">Admin</small></span><svg class="chevron" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></button><div class="account-popover" id="account-popover" hidden><div class="popover-name" id="popover-name">Đang tải tài khoản…</div><div class="popover-role" id="popover-role">Admin</div><button type="button" id="profile-button">Thông tin phiên đăng nhập</button><button type="button" class="logout-button" id="logout-button">Đăng xuất</button></div></div>
+      </div>
+    </header>
+    <main class="dashboard-main">
+      <section id="admin-module-view" class="embedded-admin-modules" hidden>
+        <div class="module-heading"><div class="breadcrumb"><a href="/admin/dashboard">zolo</a><span>&rsaquo;</span><b id="breadcrumb">User</b></div><h1 id="page-title">User</h1><p id="page-description">Qu&#x1EA3;n l&#xFD; t&#xE0;i kho&#x1EA3;n ng&#x1B0;&#x1EDD;i d&#xF9;ng.</p></div>
+        <div id="notice" class="module-notice" hidden></div>
+        <section class="module-toolbar"><div class="module-searchbox"><span>&#x2315;</span><input id="search" type="search" placeholder="T&#xEC;m theo t&#xEA;n &#x111;&#x103;ng nh&#x1EAD;p, h&#x1ECD; t&#xEA;n, email..."></div><button class="module-search-submit" id="search-submit">&#x2315; &nbsp; T&#xEC;m ki&#x1EBF;m</button><select id="filter" aria-label="L&#x1ECD;c tr&#x1EA1;ng th&#xE1;i"><option value="">T&#x1EA5;t c&#x1EA3; tr&#x1EA1;ng th&#xE1;i</option><option value="true">&#x110;ang ho&#x1EA1;t &#x111;&#x1ED9;ng</option><option value="false">Ng&#x1EEB;ng ho&#x1EA1;t &#x111;&#x1ED9;ng</option></select><button class="module-secondary" id="refresh">T&#x1EA3;i l&#x1EA1;i</button><button class="module-primary" id="create-button">&#xFF0B; &nbsp; Th&#xEA;m m&#x1EDB;i</button></section>
+        <div id="module-content"></div><div class="module-pagination"><span id="page-label"></span><button id="previous">Trước</button><button id="next">Sau</button></div>
+      </section>
+      <div class="page-heading"><div><div class="breadcrumb"><a href="/">zolo</a><span>›</span><b>Dashboard</b></div><h1>Thống kê tổng quan</h1><p>Dữ liệu được tải trực tiếp từ hệ thống hiện có.</p></div><div class="refresh-meta"><span class="live-dot"></span><span id="refresh-status">Đang tải số liệu…</span><button id="refresh-button" class="refresh-button" aria-label="Tải lại số liệu" title="Tải lại"><svg viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5m-3-4a7 7 0 0 1 12-2l2 1M4 15l2 1a7 7 0 0 0 12-2"/></svg></button></div></div>
+      <div class="load-error" id="load-error" role="alert" hidden></div>
+      <section class="metric-grid" aria-label="Thống kê hệ thống">
+        <article class="metric-card"><span class="metric-icon blue"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 10h16M4 15h16M4 20h16"/></svg></span><div><span class="metric-name">Loại sản phẩm <small>Category</small></span><strong data-metric="productTypes">—</strong></div></article>
+        <article class="metric-card"><span class="metric-icon violet"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><div><span class="metric-name">Nhóm sản phẩm</span><strong data-metric="productGroups">—</strong></div></article>
+        <article class="metric-card"><span class="metric-icon indigo"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5m-18 5 9 5 9-5"/></svg></span><div><span class="metric-name">Model</span><strong data-metric="models">—</strong></div></article>
+        <article class="metric-card"><span class="metric-icon cyan"><svg viewBox="0 0 24 24"><path d="m12 3 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5m-9 5v8"/></svg></span><div><span class="metric-name">Sản phẩm</span><strong data-metric="products">—</strong></div></article>
+        <article class="metric-card"><span class="metric-icon orange"><svg viewBox="0 0 24 24"><path d="M12 3 20 6v6c0 5-3 8-8 10-5-2-8-5-8-10V6z"/><path d="m9 12 2 2 4-5"/></svg></span><div><span class="metric-name">Phiếu bảo hành</span><strong data-metric="warrantyTickets">—</strong></div></article>
+        <article class="metric-card"><span class="metric-icon sky"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2m3-9a3 3 0 0 0 0-6m3 15v-2a6 6 0 0 0-3.5-5.5"/></svg></span><div><span class="metric-name">Tài khoản</span><strong data-metric="accounts">—</strong></div></article>
+        <article class="metric-card"><span class="metric-icon green"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></span><div><span class="metric-name">Khách hàng</span><strong data-metric="customers">—</strong></div></article>
+        <article class="metric-card"><span class="metric-icon rose"><svg viewBox="0 0 24 24"><path d="m4 4 16 16m-9-12 4-4 5 5-4 4m-4 1-4 4-5-5 4-4"/></svg></span><div><span class="metric-name">Linh kiện</span><strong data-metric="components">—</strong></div></article>
+      </section>
+      <section class="status-grid" aria-label="Trạng thái phiếu bảo hành"><article class="status-card pending"><div><span>Phiếu mới <small>(Đợi xử lý)</small></span><strong data-warranty-status="Submitted">0</strong><p>S&#x1ED1; li&#x1EC7;u t&#x1EEB; phi&#x1EBF;u b&#x1EA3;o h&#xE0;nh trong h&#x1EC7; th&#x1ED1;ng.</p></div><span class="status-icon">↗</span></article><article class="status-card processing"><div><span>Đang xử lý</span><strong data-warranty-status="InProgress">0</strong><p>S&#x1ED1; li&#x1EC7;u t&#x1EEB; phi&#x1EBF;u b&#x1EA3;o h&#xE0;nh trong h&#x1EC7; th&#x1ED1;ng.</p></div><span class="status-icon">↻</span></article><article class="status-card completed"><div><span>Đã hoàn thành</span><strong data-warranty-status="Completed">0</strong><p>S&#x1ED1; li&#x1EC7;u t&#x1EEB; phi&#x1EBF;u b&#x1EA3;o h&#xE0;nh trong h&#x1EC7; th&#x1ED1;ng.</p></div><span class="status-icon">✓</span></article></section>
+      <section class="chart-grid"><article class="panel chart-panel"><header class="panel-heading"><div><h2>Xu hướng kích hoạt</h2><p>15 ngày gần nhất</p></div><span class="not-ready">Chưa có dữ liệu</span></header><div class="empty-chart"><div class="empty-illustration"><svg viewBox="0 0 64 48"><path d="M5 42h54M8 36l13-12 11 7 18-22"/><circle cx="21" cy="24" r="2"/><circle cx="32" cy="31" r="2"/><circle cx="50" cy="9" r="2"/></svg></div><strong>Chưa có lịch sử kích hoạt</strong><span>Hệ thống hiện chưa có entity hoặc API lưu lượt kích hoạt theo ngày.</span></div></article><article class="panel chart-panel"><header class="panel-heading"><div><h2>Top model bảo hành</h2><p>Số phiếu theo model</p></div><span class="not-ready">Chưa có dữ liệu</span></header><div class="empty-chart"><div class="empty-illustration"><svg viewBox="0 0 64 48"><path d="M5 42h54M12 35V23h8v12m12 0V14h8v21m12 0V7h8v28"/></svg></div><strong>Chưa thể thống kê</strong><span>Model có trong danh mục sản phẩm, nhưng chưa có phiếu để tính số lượng bảo hành.</span></div></article></section>
+      <section class="panel table-panel"><header class="panel-heading"><div><h2>Thống kê phiếu bảo hành theo trạm</h2><p>Chi phí và trạng thái tiếp nhận</p></div><span class="not-ready">Chưa có dữ liệu</span></header><div class="table-scroll"><table><thead><tr><th>STT</th><th>Trạm bảo hành</th><th>Tự tạo</th><th>Tiếp nhận</th><th>Hoàn thành</th><th>Hủy bỏ</th><th>Phí di chuyển</th><th>Phí nhân công</th><th>Tổng chi phí</th></tr></thead><tbody><tr><td colspan="9" class="table-empty">Chưa có entity phiếu bảo hành, trạm và chi phí để hiển thị.</td></tr></tbody></table></div></section>
+      <footer class="dashboard-footer">zolo Admin <span>•</span> Dữ liệu chỉ hiển thị khi API và nguồn dữ liệu đã sẵn sàng.</footer>
+    </main>
+  </div>
+  <dialog id="edit-dialog" class="module-dialog"><form id="edit-form" method="dialog"><header><h2 id="dialog-title">Thêm mới</h2><button class="module-close" value="cancel" aria-label="Đóng">×</button></header><div class="module-form-fields" id="form-fields"></div><div class="module-dialog-actions"><button class="module-secondary" value="cancel">Hủy</button><button class="module-primary" id="save-button" type="submit">Lưu</button></div></form></dialog>
+  <dialog class="profile-dialog" id="profile-dialog"><form method="dialog"><button class="dialog-close" aria-label="Đóng">×</button><span class="dialog-avatar" id="dialog-avatar">A</span><h2>Phiên đăng nhập</h2><dl><dt>Tài khoản</dt><dd id="profile-username">—</dd><dt>Vai trò</dt><dd id="profile-user-role">—</dd><dt>User ID</dt><dd id="profile-id">—</dd><dt>Hết hạn</dt><dd id="profile-expiry">—</dd></dl><button class="dialog-ok">Đóng</button></form></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="/js/admin-dashboard.js" defer></script><script src="/js/admin-permissions.js" defer></script><script src="/js/admin-modules.js?v=20261121-password-reset" defer></script>
+</body></html>

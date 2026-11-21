@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f8fd"><meta name="description" content="Khu vực khách hàng E-Warranty">
+  <title>Khu vực của tôi | E-Warranty</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/user-dashboard.css?v=logo-fix-20261121">
+</head>
+<body class="user-body">
+  <div class="mobile-shade" id="mobile-shade"></div>
+  <aside class="user-sidebar" id="user-sidebar">
+    <a class="user-brand" href="/user/dashboard" aria-label="E-Warranty, tổng quan">
+      <img class="brand-logo-img" src="/assets/logo.png" width="44" height="48" alt="">
+      <span><b>ZOLO</b><small>Bảo hành dễ dàng – An tâm sử dụng</small></span>
+    </a>
+    <nav class="user-nav" aria-label="Menu khách hàng">
+      <a href="/user/dashboard" data-page="dashboard" class="user-nav-link"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Tổng quan</span></a>
+      <a href="/user/products" data-page="products" class="user-nav-link"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5zM3 8v9l9 5 9-5V8m-9 5v9"/></svg><span>Sản phẩm của tôi</span></a>
+      <a href="/user/warranty-register" data-page="warranty-register" class="user-nav-link"><svg viewBox="0 0 24 24"><path d="M5 3h14v18H5zM8 7h8m-8 4h8m-8 4h4m2 2 2 2 4-5"/></svg><span>Đăng ký bảo hành</span></a>
+      <a href="/user/warranty-request" data-page="warranty-request" class="user-nav-link"><svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4zM22 2 11 13"/></svg><span>Gửi yêu cầu bảo hành</span></a>
+      <a href="/user/requests" data-page="requests" class="user-nav-link"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/><circle cx="7" cy="5" r="1"/><circle cx="7" cy="12" r="1"/><circle cx="7" cy="19" r="1"/></svg><span>Theo dõi yêu cầu</span></a>
+      <a href="/user/history" data-page="history" class="user-nav-link"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8m0-5v5h5m4-1v5l4 2"/></svg><span>Lịch sử bảo hành</span></a>
+      <a href="/user/profile" data-page="profile" class="user-nav-link"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span>Hồ sơ cá nhân</span></a>
+    </nav>
+    <div class="support-card"><div class="support-shield"><svg viewBox="0 0 64 70"><path d="M32 4 56 13v19c0 16-9 26-24 34C17 58 8 48 8 32V13z"/><path d="m21 33 8 8 16-19"/></svg></div><b>Hỗ trợ E-Warranty</b><p>Chúng tôi luôn sẵn sàng đồng hành cùng bạn.</p><a href="mailto:truong104471@donga.edu.vn">Liên hệ hỗ trợ</a></div>
+    <button class="sidebar-logout" id="sidebar-logout"><svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5m5 5H3m9-9h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/></svg>Đăng xuất</button>
+    <div class="sidebar-foot"><span class="online-dot"></span> Khu vực khách hàng</div>
+  </aside>
+
+  <div class="user-shell">
+    <header class="user-topbar">
+      <div class="topbar-search"><button id="mobile-menu" class="mobile-menu" aria-label="Mở menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="7.3"/><path d="m16.2 16.2 5 5"/></svg><input id="global-search" type="search" placeholder="Tìm kiếm sản phẩm, mã yêu cầu…" aria-label="Tìm kiếm sản phẩm hoặc mã yêu cầu"></div>
+      <div class="topbar-right"><button class="notification-button" id="notification-button" aria-label="Thông báo" title="Thông báo"><svg viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4"/></svg></button><span class="topbar-divider"></span><div class="account-wrap"><button class="account-button" id="account-button" aria-haspopup="true" aria-expanded="false"><span class="user-avatar" id="user-avatar">U</span><span class="account-name" id="account-name">Khách hàng</span><svg class="account-chevron" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></button><div class="account-menu" id="account-menu" hidden><a href="/user/profile">Hồ sơ cá nhân</a><button id="menu-logout">Đăng xuất</button></div></div></div>
+    </header>
+    <main class="user-main" id="user-main" tabindex="-1"></main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="/js/user-portal-live.js" defer></script>
+</body>
+</html>

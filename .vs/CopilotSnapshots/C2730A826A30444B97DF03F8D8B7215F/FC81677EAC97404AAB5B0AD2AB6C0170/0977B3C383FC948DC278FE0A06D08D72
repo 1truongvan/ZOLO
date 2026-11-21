@@ -1,0 +1,165 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
+using System.Text;
+using WebApplication1.Data;
+using WebApplication1.DTOs;
+using WebApplication1.Models;
+
+namespace WebApplication1.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UsersController : ControllerBase
+    {
+        // 1. Khai báo biến DbContext
+        private readonly AppDbContext _db;
+
+        // 2. Inject AppDbContext thông qua Constructor
+        public UsersController(AppDbContext db)
+        {
+            _db = db;
+        }
+
+        // ------------------------------------------------------------------------
+        // READ ALL (GET)
+        // ------------------------------------------------------------------------
+        [HttpGet]
+        public ActionResult<List<UserResponse>> GetAll()
+        {
+            var users = _db.Users
+                           .Select(u => new UserResponse
+                           {
+                               Id = u.Id,
+                               Username = u.Username,
+                               Email = u.Email,
+                               Role = u.Role,
+                               CreatedAt = u.CreatedAt
+                           })
+                           .ToList();
+
+            return Ok(users);
+        }
+
+        // ------------------------------------------------------------------------
+        // READ BY ID (GET)
+        // ------------------------------------------------------------------------
+        [HttpGet("{id:int}")]
+        public ActionResult<UserResponse> GetById(int id)
+        {
+            var user = _db.Users
+                          .Where(u => u.Id == id)
+                          .Select(u => new UserResponse
+                          {
+                              Id = u.Id,
+                              Username = u.Username,
+                              Email = u.Email,
+                              Role = u.Role,
+                              CreatedAt = u.CreatedAt
+                          })
+                          .FirstOrDefault();
+
+            if (user == null)
+            {
+                return NotFound(new { message = $"Không tìm thấy người dùng có Id = {id}" });
+            }
+
+            return Ok(user);
+        }
+
+        // ------------------------------------------------------------------------
+        // CREATE / REGISTER (POST)
+        // ------------------------------------------------------------------------
+        [HttpPost("register")]
+        public ActionResult<UserResponse> Register([FromBody] UserRegister request)
+        {
+            bool isExist = _db.Users.Any(u => u.Username == request.Username || u.Email == request.Email);
+            if (isExist)
+            {
+                return BadRequest(new { message = "Username hoặc Email đã được sử dụng." });
+            }
+
+            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            var newUser = new User
+            {
+                Username = request.Username,
+                Email = request.Email,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Role = "Customer",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _db.Users.Add(newUser);
+            _db.SaveChanges();
+
+            var response = new UserResponse
+            {
+                Id = newUser.Id,
+                Username = newUser.Username,
+                Email = newUser.Email,
+                Role = newUser.Role,
+                CreatedAt = newUser.CreatedAt
+            };
+
+            return Ok(response);
+        }
+
+        // ------------------------------------------------------------------------
+        // UPDATE (PUT)
+        // ------------------------------------------------------------------------
+        [HttpPut("{id:int}")]
+        public IActionResult Update(int id, [FromBody] UserRegister request)
+        {
+            var user = _db.Users.FirstOrDefault(u => u.Id == id);
+
+            if (user == null)
+            {
+                return NotFound(new { message = $"Không tìm thấy người dùng có Id = {id}" });
+            }
+
+            if (!string.IsNullOrEmpty(request.Email)) user.Email = request.Email;
+            if (!string.IsNullOrEmpty(request.Username)) user.Username = request.Username;
+
+            if (!string.IsNullOrEmpty(request.Password))
+            {
+                CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+            }
+
+            _db.SaveChanges();
+
+            return Ok(new { message = $"Cập nhật thành công người dùng Id = {id}" });
+        }
+
+        // ------------------------------------------------------------------------
+        // DELETE
+        // ------------------------------------------------------------------------
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            var user = _db.Users.FirstOrDefault(u => u.Id == id);
+
+            if (user == null)
+            {
+                return NotFound(new { message = $"Không tìm thấy người dùng có Id = {id}" });
+            }
+
+            _db.Users.Remove(user);
+            _db.SaveChanges();
+
+            return Ok(new { message = $"Đã xóa người dùng Id = {id}" });
+        }
+
+        // Helper Methods
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using (var hmac = new HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            }
+        }
+    }
+}

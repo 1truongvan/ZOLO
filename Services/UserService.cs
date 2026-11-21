@@ -1,11 +1,13 @@
-﻿using WebApplication1.DTOs;
-using WebApplication1.Models;
-using WebApplication1.Repositories;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Globalization;
+using WebApplication1.DTOs;
+using WebApplication1.DTOs.Common;
+using WebApplication1.Models;
+using WebApplication1.Repositories;
 
 namespace WebApplication1.Services
 {
@@ -14,18 +16,23 @@ namespace WebApplication1.Services
         private readonly IUserRepository _repository;
         private readonly IConfiguration _config;
 
-        public UserService(IUserRepository repository, IConfiguration config)
+        public UserService(
+            IUserRepository repository,
+            IConfiguration config)
         {
             _repository = repository;
             _config = config;
         }
 
-        public async Task<UserResponseDto> Register(UserRegisterDto dto)
+        public async Task<UserResponse> Register(UserRegister dto)
         {
             if (await _repository.GetUsernameAsync(dto.Username) != null)
                 throw new Exception("Username already exists.");
 
-            CreatePasswordHash(dto.Password, out byte[] hash, out byte[] salt);
+            CreatePasswordHash(
+                dto.Password,
+                out byte[] hash,
+                out byte[] salt);
 
             var user = new User
             {
@@ -38,7 +45,7 @@ namespace WebApplication1.Services
 
             await _repository.AddAsync(user);
 
-            return new UserResponseDto
+            return new UserResponse
             {
                 Id = user.Id,
                 Username = user.Username,
@@ -48,41 +55,56 @@ namespace WebApplication1.Services
             };
         }
 
-        public async Task<string?> Login(UserLoginDto dto)
+        public async Task<string?> Login(UserLogin dto)
         {
             var user = await _repository.GetUsernameAsync(dto.Username);
 
-            if (user == null)
+            if (user == null || !user.IsActive)
                 return null;
 
-            if (!VerifyPassword(dto.Password, user.PasswordHash, user.PasswordSalt))
+            if (!VerifyPassword(
+                dto.Password,
+                user.PasswordHash,
+                user.PasswordSalt))
+            {
                 return null;
+            }
 
             return CreateToken(user);
         }
 
-        public async Task<List<UserResponseDto>> GetUsers()
+        public async Task<PagedResult<UserResponse>> GetAllAsync(UserQueryParameters queryParams)
         {
-            var users = await _repository.GetAllAsync();
+            var pagedUsers = await _repository.GetAllAsync(queryParams);
+            var mappedItems = pagedUsers.Items.Select(MapToResponseDto).ToList();
 
-            return users.Select(x => new UserResponseDto
-            {
-                Id = x.Id,
-                Username = x.Username,
-                Email = x.Email,
-                Role = x.Role,
-                CreatedAt = x.CreatedAt
-            }).ToList();
+            return new PagedResult<UserResponse>(
+                mappedItems,
+                pagedUsers.TotalCount,
+                pagedUsers.PageNumber,
+                pagedUsers.PageSize);
         }
 
-        public async Task<UserResponseDto?> GetUser(int id)
+        private static UserResponse MapToResponseDto(User user)
+        {
+            return new UserResponse
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt
+            };
+        }
+
+        public async Task<UserResponse?> GetUser(int id)
         {
             var user = await _repository.GetByIdAsync(id);
 
             if (user == null)
                 return null;
 
-            return new UserResponseDto
+            return new UserResponse
             {
                 Id = user.Id,
                 Username = user.Username,
@@ -100,20 +122,25 @@ namespace WebApplication1.Services
                 return false;
 
             await _repository.DeleteAsync(user);
+
             return true;
         }
 
-        private void CreatePasswordHash(string password,
+        private void CreatePasswordHash(
+            string password,
             out byte[] passwordHash,
             out byte[] passwordSalt)
         {
             using var hmac = new HMACSHA512();
 
             passwordSalt = hmac.Key;
-            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+            passwordHash = hmac.ComputeHash(
+                Encoding.UTF8.GetBytes(password));
         }
 
-        private bool VerifyPassword(string password,
+        private bool VerifyPassword(
+            string password,
             byte[] hash,
             byte[] salt)
         {
@@ -122,31 +149,52 @@ namespace WebApplication1.Services
             var computedHash = hmac.ComputeHash(
                 Encoding.UTF8.GetBytes(password));
 
-            return computedHash.SequenceEqual(hash);
+            return CryptographicOperations.FixedTimeEquals(computedHash, hash);
         }
 
         private string CreateToken(User user)
         {
+            var jwtSettings = _config.GetSection("JwtSettings");
+            var secretKey = jwtSettings["SecretKey"]
+                ?? throw new InvalidOperationException("Missing JwtSettings:SecretKey configuration.");
+            var issuer = jwtSettings["Issuer"]
+                ?? throw new InvalidOperationException("Missing JwtSettings:Issuer configuration.");
+            var audience = jwtSettings["Audience"]
+                ?? throw new InvalidOperationException("Missing JwtSettings:Audience configuration.");
+            if (!double.TryParse(
+                    jwtSettings["ExpiryMinutes"],
+                    NumberStyles.Number,
+                    CultureInfo.InvariantCulture,
+                    out var expiryMinutes)
+                || expiryMinutes <= 0)
+            {
+                throw new InvalidOperationException(
+                    "JwtSettings:ExpiryMinutes phải là số dương hợp lệ.");
+            }
+
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name,user.Username),
-                new Claim(ClaimTypes.Role,user.Role)
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
             var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+                Encoding.UTF8.GetBytes(secretKey));
 
             var creds = new SigningCredentials(
                 key,
-                SecurityAlgorithms.HmacSha512Signature);
+                SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
+                issuer: issuer,
+                audience: audience,
                 claims: claims,
-                expires: DateTime.Now.AddHours(12),
-                signingCredentials: creds
-            );
+                expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
+                signingCredentials: creds);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new JwtSecurityTokenHandler()
+                .WriteToken(token);
         }
     }
 }

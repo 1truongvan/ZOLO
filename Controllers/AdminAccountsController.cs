@@ -19,7 +19,7 @@ public class AdminAccountsController(AppDbContext db) : ControllerBase
     private static readonly string[] AllowedRoles = ["User", "Customer", "Admin", "Manager", "Technician"];
 
     [HttpGet]
-    [ModulePermission("user", "view")]
+    [ModulePermission("customer", "view")]
     public async Task<IActionResult> List([FromQuery] string? search, [FromQuery] string? role, [FromQuery] bool? active,
         [FromQuery] int page = 1, [FromQuery] int pageSize = 20, CancellationToken ct = default)
     {

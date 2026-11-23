@@ -15,9 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // ========================================
 // 1. KẾT NỐI DATABASE
 // ========================================
-
-var connectionString = builder.Configuration
-    .GetConnectionString("DefaultConnection");
+var connectionString = @"Server=(localdb)\MSSQLLocalDB;Database=Web2;Integrated Security=True;TrustServerCertificate=True";
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -35,6 +33,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IModulePermissionService, ModulePermissionService>();
+builder.Services.AddScoped<IWarrantyRequestService, WarrantyRequestService>();
 
 // ========================================
 // 4. ĐỌC CẤU HÌNH JWT

@@ -1,6 +1,7 @@
-﻿
+
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
+using YourProject.Models;
 
 namespace WebApplication1.Data
 {
@@ -13,6 +14,11 @@ namespace WebApplication1.Data
 
         // Bảng User
         public DbSet<User> Users { get; set; } = null!;
+        //bảng RepairJob 
+        // dùng để lưu trữ thông tin về các công việc sửa chữa, bao gồm các chi tiết như số công việc, trạng thái, chẩn đoán, ghi chú sửa chữa, thời gian tạo và hoàn thành, cũng như liên kết đến yêu cầu bảo hành và kỹ thuật viên thực hiện công việc.
+        public DbSet<RepairJob> RepairJobs { get; set; } = null!;
+        public DbSet<RepairJobUpdate> RepairJobUpdates { get; set; } = null!;
+        public DbSet<RepairJobPart> RepairJobParts { get; set; } = null!;
 
         // Bảng Products
         public DbSet<Product> Products { get; set; } = null!;
@@ -26,6 +32,7 @@ namespace WebApplication1.Data
         public DbSet<StockDocumentLine> StockDocumentLines { get; set; } = null!;
         public DbSet<StationPartBalance> StationPartBalances { get; set; } = null!;
         public DbSet<WarrantyRequest> WarrantyRequests { get; set; } = null!;
+        public DbSet<WarrantyRequestAttachment> WarrantyRequestAttachments { get; set; } = null!;
         public DbSet<PermissionModule> PermissionModules { get; set; } = null!;
         public DbSet<PermissionDetail> PermissionDetails { get; set; } = null!;
         public DbSet<RoleModulePermission> RoleModulePermissions { get; set; } = null!;
@@ -33,6 +40,7 @@ namespace WebApplication1.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             base.OnModelCreating(modelBuilder);
 
             // Giữ nguyên tên bảng User
@@ -60,6 +68,14 @@ namespace WebApplication1.Data
             modelBuilder.Entity<StationPartBalance>().ToTable("StationPartBalances", table =>
                 table.HasCheckConstraint("CK_StationPartBalances_ValidQuantities", "[AllocatedQuantity] >= 0 AND [UsedQuantity] >= 0 AND [UsedQuantity] <= [AllocatedQuantity]"));
             modelBuilder.Entity<WarrantyRequest>().ToTable("WarrantyRequests");
+            modelBuilder.Entity<WarrantyRequest>().HasOne(request => request.FaultGroup).WithMany()
+                .HasForeignKey(request => request.FaultGroupId).OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<WarrantyRequestAttachment>().ToTable("WarrantyRequestAttachments");
+            modelBuilder.Entity<WarrantyRequestAttachment>().HasOne(attachment => attachment.WarrantyRequest)
+                .WithMany(request => request.Attachments).HasForeignKey(attachment => attachment.WarrantyRequestId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<WarrantyRequestAttachment>().HasOne(attachment => attachment.StoredFile)
+                .WithMany().HasForeignKey(attachment => attachment.StoredFileId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<WarrantyRequestAttachment>().HasIndex(attachment => new { attachment.WarrantyRequestId, attachment.StoredFileId }).IsUnique();
             modelBuilder.Entity<PermissionModule>().ToTable("PermissionModules");
             modelBuilder.Entity<PermissionDetail>().ToTable("PermissionDetails");
             modelBuilder.Entity<RoleModulePermission>().ToTable("RoleModulePermissions");
@@ -139,6 +155,36 @@ namespace WebApplication1.Data
             modelBuilder.Entity<WarrantyRequest>().HasOne(request => request.Product)
                 .WithMany().HasForeignKey(request => request.ProductId).OnDelete(DeleteBehavior.SetNull);
 
+             modelBuilder.Entity<RepairJob>()
+                .HasOne(r => r.WarrantyRequest)
+                .WithMany()
+                .HasForeignKey(r => r.WarrantyRequestId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<RepairJobUpdate>().ToTable("RepairJobUpdates");
+            modelBuilder.Entity<RepairJobUpdate>()
+                .HasOne(update => update.RepairJob)
+                .WithMany()
+                .HasForeignKey(update => update.RepairJobId)
+                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<RepairJobUpdate>()
+                .HasOne(update => update.UpdatedByUser)
+                .WithMany()
+                .HasForeignKey(update => update.UpdatedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<RepairJobPart>().ToTable("RepairJobParts");
+            modelBuilder.Entity<RepairJobPart>().HasIndex(part => new { part.RepairJobId, part.ComponentId }).IsUnique();
+            modelBuilder.Entity<RepairJobPart>().Property(part => part.UnitPrice).HasPrecision(18, 2);
+            modelBuilder.Entity<RepairJobPart>()
+                .HasOne(part => part.RepairJob)
+                .WithMany()
+                .HasForeignKey(part => part.RepairJobId)
+                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<RepairJobPart>()
+                .HasOne(part => part.Component)
+                .WithMany()
+                .HasForeignKey(part => part.ComponentId)
+                .OnDelete(DeleteBehavior.Restrict);
             // Username không được trùng
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Username)
@@ -151,3 +197,5 @@ namespace WebApplication1.Data
         }
     }
 }
+
+

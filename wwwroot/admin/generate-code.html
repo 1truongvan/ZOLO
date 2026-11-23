@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tạo mã bảo hành</title>
+    <style>
+        body {
+            font: 16px Arial, sans-serif;
+            max-width: 680px;
+            margin: 40px auto;
+            padding: 0 16px;
+            color: #243047;
+        }
+
+        form {
+            display: grid;
+            gap: 14px;
+        }
+
+        label {
+            display: grid;
+            gap: 6px;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccd3df;
+            border-radius: 6px;
+        }
+
+        button {
+            padding: 11px;
+            border: 0;
+            border-radius: 6px;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 16px;
+            padding: 12px;
+            background: #eef4ff;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tạo mã bảo hành</h1>
+
+    <form id="code-form">
+        <label>
+            Tên sản phẩm
+            <input name="productName" required maxlength="120">
+        </label>
+
+        <label>
+            Thương hiệu (phải có trong danh mục)
+            <select name="brand" required><option value="">Đang tải thương hiệu...</option></select>
+        </label>
+
+        <label>
+            Phân loại (phải có trong danh mục)
+            <select name="category" required><option value="">Đang tải phân loại...</option></select>
+        </label>
+
+        <label>
+            Model
+            <input name="model" required maxlength="100">
+        </label>
+
+        <label>
+            Serial thiết bị
+            <input name="serialNumber" required maxlength="100">
+        </label>
+
+        <label>
+            Ngày mua
+            <input name="purchaseDate" type="date" required>
+        </label>
+
+        <label>
+            Thời hạn bảo hành (tháng)
+            <input name="warrantyPeriod" type="number" min="0" max="120" value="12" required>
+        </label>
+
+        <button type="submit">Tạo mã</button>
+    </form>
+
+    <pre id="result" hidden></pre>
+
+    <script>
+      const token = sessionStorage.getItem("eWarrantyToken") || localStorage.getItem("eWarrantyToken");
+      const form = document.querySelector("#code-form");
+      const result = document.querySelector("#result");
+      const brandSelect = form.elements.brand;
+      const categorySelect = form.elements.category;
+      const submitButton = form.querySelector("button[type=submit]");
+      const dateInput = form.elements.purchaseDate;
+      const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
+      const localToday = () => {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      };
+      const setPurchaseDateDefault = () => { dateInput.value = localToday(); dateInput.max = localToday(); };
+      const addWarrantyMonths = (dateText, months) => {
+        const date = new Date(`${dateText}T00:00:00`);
+        const day = date.getDate();
+        date.setDate(1);
+        date.setMonth(date.getMonth() + months);
+        const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        date.setDate(Math.min(day, lastDay));
+        return date;
+      };
+      setPurchaseDateDefault();
+
+      async function loadCatalog(resource, select, label) {
+        const response = await fetch(`/api/admin/catalog/${resource}?active=true&page=1&pageSize=100`, {
+          headers: { Authorization: `Bearer ${token}`, Accept: "application/json" }, cache: "no-store"
+        });
+        const data = await response.json().catch(() => null);
+        if (!response.ok) throw new Error(data?.message || `Không tải được ${label} (HTTP ${response.status}).`);
+        const items = data?.items || [];
+        select.innerHTML = `<option value="">-- Chọn ${label} --</option>` +
+          items.map(item => `<option value="${escapeHtml(item.name)}">${escapeHtml(item.name)}</option>`).join("");
+        if (!items.length) throw new Error(`Chưa có ${label} đang hoạt động. Hãy tạo danh mục trước.`);
+      }
+
+      (async () => {
+        if (!token) {
+          result.hidden = false;
+          result.textContent = "Bạn cần đăng nhập lại để tạo mã.";
+          submitButton.disabled = true;
+          return;
+        }
+        try {
+          await Promise.all([
+            loadCatalog("brands", brandSelect, "thương hiệu"),
+            loadCatalog("categories", categorySelect, "phân loại")
+          ]);
+        } catch (error) {
+          result.hidden = false;
+          result.textContent = error.message;
+          submitButton.disabled = true;
+        }
+      })();
+
+      form.addEventListener("submit", async event => {
+        event.preventDefault();
+        if (!token) {
+          result.hidden = false;
+          result.textContent = "Bạn cần đăng nhập lại để tạo mã.";
+          return;
+        }
+        const values = new FormData(form);
+        const purchaseDate = values.get("purchaseDate");
+        if (!purchaseDate || purchaseDate > localToday()) {
+          result.hidden = false;
+          result.textContent = "Ngày mua phải hợp lệ và không được ở tương lai.";
+          return;
+        }
+        const payload = {
+          productName: values.get("productName").trim(), brand: values.get("brand"),
+          category: values.get("category"), model: values.get("model").trim(),
+          serialNumber: values.get("serialNumber").trim(), purchaseDate: `${purchaseDate}T00:00:00`,
+          warrantyPeriod: Number(values.get("warrantyPeriod"))
+        };
+        result.hidden = false;
+        result.textContent = "Đang tạo mã...";
+        submitButton.disabled = true;
+        try {
+          const response = await fetch("/api/admin/products/generate-code", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json().catch(() => null);
+          if (!response.ok) throw new Error(data?.message || `Lỗi HTTP ${response.status}`);
+          const expiry = addWarrantyMonths(purchaseDate, payload.warrantyPeriod).toLocaleDateString("vi-VN");
+          result.textContent = `Tạo mã thành công!\nMã bảo hành: ${data.warrantyCode}\nSerial: ${data.serialNumber}\nNgày hết hạn dự kiến: ${expiry}\nSản phẩm đã được lưu. Khách hàng dùng mã và serial để đăng ký.`;
+          form.reset();
+          setPurchaseDateDefault();
+        } catch (error) {
+          result.textContent = error.message;
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+    </script>
+</body>
+</html>

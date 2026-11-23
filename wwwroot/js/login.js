@@ -76,7 +76,7 @@
       } else {
         window.location.assign('/');
       }
-    } catch (error) {
+    } catch (error) {   
       setMessage(error instanceof TypeError
         ? 'Không thể kết nối đến máy chủ. Hãy kiểm tra kết nối và thử lại.'
         : (error.message || 'Đăng nhập thất bại. Vui lòng thử lại.'));

@@ -7,6 +7,7 @@ public class WarrantyRequest
     public int CustomerUserId { get; set; }
     public int? ProductId { get; set; }
     public int? AssignedTechnicianId { get; set; }
+    public int? FaultGroupId { get; set; }
     public string Description { get; set; } = string.Empty;
     public string Status { get; set; } = "Submitted";
     public string? InspectionResult { get; set; }
@@ -20,4 +21,6 @@ public class WarrantyRequest
     public User Customer { get; set; } = null!;
     public User? AssignedTechnician { get; set; }
     public Product? Product { get; set; }
+    public AdminCatalogEntry? FaultGroup { get; set; }
+    public ICollection<WarrantyRequestAttachment> Attachments { get; set; } = new List<WarrantyRequestAttachment>();
 }

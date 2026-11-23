@@ -584,6 +584,9 @@ namespace WebApplication1.Migrations
                     b.Property<string>("FaultCause")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("FaultGroupId")
+                        .HasColumnType("int");
+
                     b.Property<string>("InspectionResult")
                         .HasColumnType("nvarchar(max)");
 
@@ -616,12 +619,161 @@ namespace WebApplication1.Migrations
 
                     b.HasIndex("CustomerUserId");
 
+                    b.HasIndex("FaultGroupId");
+
                     b.HasIndex("ProductId");
 
                     b.HasIndex("RequestCode")
                         .IsUnique();
 
                     b.ToTable("WarrantyRequests", (string)null);
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.WarrantyRequestAttachment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("StoredFileId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("WarrantyRequestId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoredFileId");
+
+                    b.HasIndex("WarrantyRequestId", "StoredFileId")
+                        .IsUnique();
+
+                    b.ToTable("WarrantyRequestAttachments", (string)null);
+                });
+
+            modelBuilder.Entity("YourProject.Models.RepairJob", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Diagnosis")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JobNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("RepairNote")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int?>("TechnicianId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TechnicianUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WarrantyRequestId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TechnicianId");
+
+                    b.HasIndex("WarrantyRequestId");
+
+                    b.ToTable("RepairJobs");
+                });
+
+            modelBuilder.Entity("YourProject.Models.RepairJobPart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ComponentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RepairJobId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComponentId");
+
+                    b.HasIndex("RepairJobId", "ComponentId")
+                        .IsUnique();
+
+                    b.ToTable("RepairJobParts", (string)null);
+                });
+
+            modelBuilder.Entity("YourProject.Models.RepairJobUpdate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NewStatus")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldStatus")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("RepairJobId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UpdatedByUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RepairJobId");
+
+                    b.HasIndex("UpdatedByUserId");
+
+                    b.ToTable("RepairJobUpdates", (string)null);
                 });
 
             modelBuilder.Entity("WebApplication1.Models.AdminCatalogEntry", b =>
@@ -805,6 +957,11 @@ namespace WebApplication1.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("WebApplication1.Models.AdminCatalogEntry", "FaultGroup")
+                        .WithMany()
+                        .HasForeignKey("FaultGroupId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("WebApplication1.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -814,7 +971,83 @@ namespace WebApplication1.Migrations
 
                     b.Navigation("Customer");
 
+                    b.Navigation("FaultGroup");
+
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.WarrantyRequestAttachment", b =>
+                {
+                    b.HasOne("WebApplication1.Models.StoredFile", "StoredFile")
+                        .WithMany()
+                        .HasForeignKey("StoredFileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication1.Models.WarrantyRequest", "WarrantyRequest")
+                        .WithMany("Attachments")
+                        .HasForeignKey("WarrantyRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StoredFile");
+
+                    b.Navigation("WarrantyRequest");
+                });
+
+            modelBuilder.Entity("YourProject.Models.RepairJob", b =>
+                {
+                    b.HasOne("WebApplication1.Models.User", "Technician")
+                        .WithMany()
+                        .HasForeignKey("TechnicianId");
+
+                    b.HasOne("WebApplication1.Models.WarrantyRequest", "WarrantyRequest")
+                        .WithMany()
+                        .HasForeignKey("WarrantyRequestId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Technician");
+
+                    b.Navigation("WarrantyRequest");
+                });
+
+            modelBuilder.Entity("YourProject.Models.RepairJobPart", b =>
+                {
+                    b.HasOne("WebApplication1.Models.AdminCatalogEntry", "Component")
+                        .WithMany()
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("YourProject.Models.RepairJob", "RepairJob")
+                        .WithMany()
+                        .HasForeignKey("RepairJobId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Component");
+
+                    b.Navigation("RepairJob");
+                });
+
+            modelBuilder.Entity("YourProject.Models.RepairJobUpdate", b =>
+                {
+                    b.HasOne("YourProject.Models.RepairJob", "RepairJob")
+                        .WithMany()
+                        .HasForeignKey("RepairJobId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication1.Models.User", "UpdatedByUser")
+                        .WithMany()
+                        .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("RepairJob");
+
+                    b.Navigation("UpdatedByUser");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.PermissionDetail", b =>
@@ -837,6 +1070,11 @@ namespace WebApplication1.Migrations
             modelBuilder.Entity("WebApplication1.Models.StockDocument", b =>
                 {
                     b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.WarrantyRequest", b =>
+                {
+                    b.Navigation("Attachments");
                 });
 #pragma warning restore 612, 618
         }

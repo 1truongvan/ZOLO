@@ -1,24 +1,40 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebApplication1.Data;
+using WebApplication1.DTOs;
+using WebApplication1.Services;
 
 namespace WebApplication1.Controllers;
 
 [ApiController]
 [Route("api/account")]
 [Authorize(Roles = "Customer,User")]
-public sealed class CustomerAccountController(AppDbContext db) : ControllerBase
+public sealed class CustomerAccountController(IUserService userService) : ControllerBase
 {
     [HttpGet("me")]
-    public async Task<IActionResult> Me(CancellationToken ct)
+    public async Task<IActionResult> Me()
     {
-        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId)) return Unauthorized();
-        var account = await db.Users.AsNoTracking()
-            .Where(user => user.Id == userId && user.IsActive)
-            .Select(user => new { user.Id, user.Username, user.FullName, user.Email, user.PhoneNumber, user.Role, user.CreatedAt })
-            .FirstOrDefaultAsync(ct);
-        return account is null ? Unauthorized() : Ok(account);
+        if (!TryGetUserId(out var userId)) return Unauthorized();
+        var profile = await userService.GetProfileAsync(userId);
+        return profile is null ? Unauthorized() : Ok(profile);
     }
+
+    [HttpPut("me")]
+    public async Task<IActionResult> UpdateMe(UpdateOwnProfileRequest request)
+    {
+        if (!TryGetUserId(out var userId)) return Unauthorized();
+
+        try
+        {
+            var profile = await userService.UpdateOwnProfileAsync(userId, request.FullName);
+            return profile is null ? Unauthorized() : Ok(profile);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    private bool TryGetUserId(out int userId) =>
+        int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
 }

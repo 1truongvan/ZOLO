@@ -1,7 +1,7 @@
 [
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/account-roles",
     "HttpMethod": "GET",
     "IsController": false,
@@ -17,7 +17,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/accounts",
     "HttpMethod": "GET",
     "IsController": false,
@@ -33,7 +33,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/allocations",
     "HttpMethod": "GET",
     "IsController": false,
@@ -49,7 +49,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/brands",
     "HttpMethod": "GET",
     "IsController": false,
@@ -65,7 +65,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/categories",
     "HttpMethod": "GET",
     "IsController": false,
@@ -81,7 +81,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/component-proposals",
     "HttpMethod": "GET",
     "IsController": false,
@@ -97,7 +97,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/component-receipts",
     "HttpMethod": "GET",
     "IsController": false,
@@ -113,7 +113,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/components",
     "HttpMethod": "GET",
     "IsController": false,
@@ -145,7 +145,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/dealers",
     "HttpMethod": "GET",
     "IsController": false,
@@ -161,7 +161,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/fault-groups",
     "HttpMethod": "GET",
     "IsController": false,
@@ -177,7 +177,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/inventory",
     "HttpMethod": "GET",
     "IsController": false,
@@ -193,7 +193,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/products",
     "HttpMethod": "GET",
     "IsController": false,
@@ -209,7 +209,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/receipts",
     "HttpMethod": "GET",
     "IsController": false,
@@ -225,7 +225,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/service-prices",
     "HttpMethod": "GET",
     "IsController": false,
@@ -241,7 +241,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/shipments",
     "HttpMethod": "GET",
     "IsController": false,
@@ -257,7 +257,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/station-parts",
     "HttpMethod": "GET",
     "IsController": false,
@@ -273,7 +273,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/stations",
     "HttpMethod": "GET",
     "IsController": false,
@@ -289,7 +289,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/travel-prices",
     "HttpMethod": "GET",
     "IsController": false,
@@ -305,7 +305,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/warehouses",
     "HttpMethod": "GET",
     "IsController": false,
@@ -321,7 +321,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/warranty-requests",
     "HttpMethod": "GET",
     "IsController": false,
@@ -337,7 +337,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_2",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__15",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__16",
     "RelativePath": "admin/warranty-types",
     "HttpMethod": "GET",
     "IsController": false,
@@ -359,6 +359,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApplication1.Controllers.CustomerAccountController",
+    "Method": "UpdateMe",
+    "RelativePath": "api/account/me",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "WebApplication1.DTOs.UpdateOwnProfileRequest",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -1382,6 +1398,27 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApplication1.Controllers.WarrantyRequestsController",
+    "Method": "Reassign",
+    "RelativePath": "api/warranty-requests/{id}/reassign",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "WebApplication1.DTOs.WarrantyAssignmentDto",
         "IsRequired": true
       }
     ],

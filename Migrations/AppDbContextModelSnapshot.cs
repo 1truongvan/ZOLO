@@ -557,6 +557,37 @@ namespace WebApplication1.Migrations
                     b.ToTable("User", (string)null);
                 });
 
+            modelBuilder.Entity("WebApplication1.Models.WarrantyMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("SenderUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("WarrantyRequestId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SenderUserId");
+
+                    b.HasIndex("WarrantyRequestId", "SentAt");
+
+                    b.ToTable("WarrantyMessages", (string)null);
+                });
+
             modelBuilder.Entity("WebApplication1.Models.WarrantyRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -942,6 +973,25 @@ namespace WebApplication1.Migrations
                     b.Navigation("Document");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.WarrantyMessage", b =>
+                {
+                    b.HasOne("WebApplication1.Models.User", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication1.Models.WarrantyRequest", "WarrantyRequest")
+                        .WithMany()
+                        .HasForeignKey("WarrantyRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sender");
+
+                    b.Navigation("WarrantyRequest");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.WarrantyRequest", b =>

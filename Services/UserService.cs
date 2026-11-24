@@ -126,6 +126,49 @@ namespace WebApplication1.Services
             return true;
         }
 
+        public async Task<UserProfileResponse?> GetProfileAsync(int userId)
+        {
+            var user = await _repository.GetByIdAsync(userId);
+            if (user is null || !user.IsActive) return null;
+
+            return new UserProfileResponse
+            {
+                Id = user.Id,
+                Username = user.Username,
+                FullName = user.FullName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt
+            };
+        }
+
+        public async Task<UserProfileResponse?> UpdateOwnProfileAsync(int userId, string fullName)
+        {
+            var normalizedName = fullName?.Trim();
+            if (string.IsNullOrWhiteSpace(normalizedName))
+                throw new ArgumentException("Họ và tên không được để trống.");
+            if (normalizedName.Length > 120)
+                throw new ArgumentException("Họ và tên tối đa 120 ký tự.");
+
+            var user = await _repository.GetByIdAsync(userId);
+            if (user is null || !user.IsActive) return null;
+
+            user.FullName = normalizedName;
+            await _repository.UpdateAsync(user);
+
+            return new UserProfileResponse
+            {
+                Id = user.Id,
+                Username = user.Username,
+                FullName = user.FullName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt
+            };
+        }
+
         private void CreatePasswordHash(
             string password,
             out byte[] passwordHash,

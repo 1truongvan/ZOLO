@@ -15,5 +15,9 @@ namespace WebApplication1.Services
         Task<UserResponse?> GetUser(int id);
 
         Task<bool> DeleteUser(int id);
+
+        Task<UserProfileResponse?> GetProfileAsync(int userId);
+
+        Task<UserProfileResponse?> UpdateOwnProfileAsync(int userId, string fullName);
     }
 }

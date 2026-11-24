@@ -25,7 +25,7 @@ namespace WebApplication1.Data
 
         // Bảng StoredFile
         public DbSet<StoredFile> StoredFiles { get; set; } = null!;
-
+        public DbSet<WarrantyMessage> WarrantyMessages { get; set; } = null!;
         public DbSet<AdminCatalogEntry> AdminCatalogEntries { get; set; } = null!;
         public DbSet<InventoryBalance> InventoryBalances { get; set; } = null!;
         public DbSet<StockDocument> StockDocuments { get; set; } = null!;
@@ -42,7 +42,26 @@ namespace WebApplication1.Data
         {
 
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<WarrantyMessage>().ToTable("WarrantyMessages");
 
+            modelBuilder.Entity<WarrantyMessage>()
+                .HasOne(message => message.WarrantyRequest)
+                .WithMany()
+                .HasForeignKey(message => message.WarrantyRequestId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<WarrantyMessage>()
+                .HasOne(message => message.Sender)
+                .WithMany()
+                .HasForeignKey(message => message.SenderUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WarrantyMessage>()
+                .HasIndex(message => new
+                {
+                    message.WarrantyRequestId,
+                    message.SentAt
+                });
             // Giữ nguyên tên bảng User
             modelBuilder.Entity<User>()
                 .ToTable("User");

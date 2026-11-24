@@ -31,6 +31,7 @@ public interface IWarrantyRequestService
     Task<WarrantyRequestServiceResult<object>> GetCustomerHistoryAsync(int userId, CancellationToken ct);
     Task<WarrantyRequestServiceResult<object>> ReviewAsync(int id, WarrantyReviewDto dto, CancellationToken ct);
     Task<WarrantyRequestServiceResult<object>> AssignAsync(int id, WarrantyAssignmentDto dto, CancellationToken ct);
+    Task<WarrantyRequestServiceResult<object>> ReassignAsync(int id, WarrantyAssignmentDto dto, CancellationToken ct);
     Task<List<WarrantyRequestResponse>> GetAssignedAsync(int technicianId, CancellationToken ct);
     Task<List<WarrantyFaultGroupOption>> GetFaultGroupsAsync(CancellationToken ct);
     Task<List<WarrantyTechnicianOption>> GetTechniciansAsync(CancellationToken ct);
@@ -118,6 +119,37 @@ public sealed class WarrantyRequestService(AppDbContext db) : IWarrantyRequestSe
         item.AssignedTechnicianId = technician.Id; item.Status = "InProgress"; item.UpdatedAt = DateTime.UtcNow;
         await db.SaveChangesAsync(ct);
         return WarrantyRequestServiceResult<object>.Success(new { item.Id, item.Status, Technician = technician.Username });
+    }
+
+    public async Task<WarrantyRequestServiceResult<object>> ReassignAsync(int id, WarrantyAssignmentDto dto, CancellationToken ct)
+    {
+        var item = await db.WarrantyRequests.FirstOrDefaultAsync(request => request.Id == id, ct);
+        if (item is null)
+            return WarrantyRequestServiceResult<object>.Failure("Không tìm thấy yêu cầu.", StatusCodes.Status404NotFound);
+        if (item.Status != "InProgress" || !item.AssignedTechnicianId.HasValue)
+            return WarrantyRequestServiceResult<object>.Failure("Chỉ có thể giao lại phiếu đang được kỹ thuật viên xử lý.", StatusCodes.Status409Conflict);
+        if (item.AssignedTechnicianId.Value == dto.TechnicianId)
+            return WarrantyRequestServiceResult<object>.Failure("Hãy chọn kỹ thuật viên khác với người đang phụ trách.", StatusCodes.Status400BadRequest);
+
+        var technician = await db.Users.FirstOrDefaultAsync(
+            user => user.Id == dto.TechnicianId && user.Role == "Technician" && user.IsActive, ct);
+        if (technician is null)
+            return WarrantyRequestServiceResult<object>.Failure("Không tìm thấy kỹ thuật viên đang hoạt động.", StatusCodes.Status400BadRequest);
+
+        var previousTechnicianId = item.AssignedTechnicianId.Value;
+        item.AssignedTechnicianId = technician.Id;
+        item.UpdatedAt = DateTime.UtcNow;
+        await db.SaveChangesAsync(ct);
+
+        return WarrantyRequestServiceResult<object>.Success(new
+        {
+            item.Id,
+            item.RequestCode,
+            item.Status,
+            PreviousTechnicianId = previousTechnicianId,
+            TechnicianId = technician.Id,
+            Technician = technician.FullName ?? technician.Username
+        });
     }
 
     public Task<List<WarrantyRequestResponse>> GetAssignedAsync(int technicianId, CancellationToken ct) =>

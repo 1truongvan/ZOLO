@@ -67,6 +67,10 @@ public class WarrantyRequestsController(IWarrantyRequestService warrantyRequestS
     [HttpPost("{id:int}/assign"), Authorize(Roles = "Admin,Manager"), ModulePermission("warranti:manage-technicians", "edit")]
     public async Task<IActionResult> Assign(int id, WarrantyAssignmentDto dto, CancellationToken ct) => FromService(await warrantyRequestService.AssignAsync(id, dto, ct));
 
+    [HttpPost("{id:int}/reassign"), Authorize(Roles = "Admin,Manager"), ModulePermission("warranti:manage-technicians", "edit")]
+    public async Task<IActionResult> Reassign(int id, WarrantyAssignmentDto dto, CancellationToken ct) =>
+        FromService(await warrantyRequestService.ReassignAsync(id, dto, ct));
+
     [HttpGet("assigned"), Authorize(Roles = "Technician"), ModulePermission("warranti", "view")]
     public async Task<IActionResult> Assigned(CancellationToken ct) => Ok(await warrantyRequestService.GetAssignedAsync(UserId, ct));
 
